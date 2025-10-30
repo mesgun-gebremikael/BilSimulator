@@ -23,6 +23,7 @@ namespace BilSimulator
             int hastighet = 0;
             int bransle = 100;
             double temp = 85;
+
         }
     }
 
