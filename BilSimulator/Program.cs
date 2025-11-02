@@ -58,9 +58,40 @@ namespace BilSimulator
                 await Task.Delay(TimeSpan.FromSeconds(15));
             }
         }
-    }
+        // Den här metoden skickar datan till ThingSpeak
+        private static async Task SkickaTillThingSpeak(int rpm, int hastighet, int bransle, double temp, string felkod, double latitude, double longitude)
+        {
+            string url = $"https://api.thingspeak.com/update?api_key={WriteApiKey}" +
+                         $"&field1={rpm}" +
+                         $"&field2={hastighet}" +
+                         $"&field3={bransle}" +
+                         $"&field4={temp.ToString(System.Globalization.CultureInfo.InvariantCulture)}" +
+                         $"&field5={felkod}" +
+                         $"&field6={latitude.ToString(System.Globalization.CultureInfo.InvariantCulture)}" +
+                         $"&field7={longitude.ToString(System.Globalization.CultureInfo.InvariantCulture)}";
 
-} 
+            try
+            {
+                using var client = new HttpClient();
+                var response = await client.GetAsync(url);
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Data skickad till ThingSpeak.\n");
+                }
+                else
+                {
+                    Console.WriteLine("Kunde inte skicka data till ThingSpeak.\n");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Fel vid anslutning: " + ex.Message);
+            }
+        }
+    }
+}
+
+
               
 
 
